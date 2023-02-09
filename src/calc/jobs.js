@@ -10,18 +10,44 @@ export class Vagrant extends Mover {
         this.armor = armor || null;
         this.armorUpgrade = 0;
         this.armorUpgradeBonus = null;
+        this.armorBonus1 = null;
+        this.armorBonus2 = null;
+        this.armorBonus3 = null;
+        this.armorBonus4 = null;
         this.mainhandUpgrade = 0;
         this.mainhandUpgradeBonus = null;
         this.offhandUpgrade = 0;
         this.offhandUpgradeBonus = null;
         this.mainhand = mainhand || Utils.getItemByName("Wooden Sword");
+        this.weaponBonus1 = null;
+        this.weaponBonus2 = null;
         this.offhand = offhand || null;
         this.earringR = null;
         this.earringL = null;
         this.ringR = null;
         this.ringL = null;
         this.necklace = null;
-        this.suitPiercing = null;
+        this.suitPiercing1 = null;
+        this.suitPiercing2 = null;
+        this.suitPiercing3 = null;
+        this.suitPiercing4 = null;
+        this.weapPiercing1 = null;
+        this.weapPiercing2 = null;
+        this.weapPiercing3 = null;
+        this.weapPiercing4 = null;
+        this.weapPiercing5 = null;
+        this.weapPiercing6 = null;
+        this.weapPiercing7 = null;
+        this.weapPiercing8 = null;
+        this.weapPiercing9 = null;
+        this.weapPiercing10 = null;
+        this.pet = null;
+        this.pete = null;
+        this.petd = null;
+        this.petc = null;
+        this.petb = null;
+        this.peta = null;
+        this.petx = null;
         this.shield = null;
         this.assistBuffs = false;
         this.selfBuffs = false;
@@ -115,13 +141,13 @@ export class Vagrant extends Mover {
 
 
 export class Assist extends Vagrant {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 15, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 8962;
         img = img || "overamknuckle.png";
         armor = armor || Utils.getArmorByName("Sayram Set");
         mainhand = mainhand || Utils.getItemByName("Paipol Knuckle");
         constants = constants || {
-            'skills': [Utils.getSkillByName("Power Fist"),
+            'skills': [Utils.getSkillByName("Moon Beam"),
                 Utils.getSkillByName("Temping Hole"),
                 Utils.getSkillByName("Burst Crack")
             ],
@@ -170,7 +196,7 @@ export class Assist extends Vagrant {
 }
 
 export class Billposter extends Assist {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 7424;
         img = img || "bloodyknuckle.png";
         armor = armor || Utils.getArmorByName("Rody Set");
@@ -180,7 +206,9 @@ export class Billposter extends Assist {
                 Utils.getSkillByName("Blood Fist"),
                 Utils.getSkillByName("Asalraalaikum")
             ],
-            'buffs': [Utils.getSkillByName("Asmodeus")],
+            'buffs': [Utils.getSkillByName("Asmodeus"),
+                      Utils.getSkillByName("Stonehand")
+            ],
             'attackSpeed': 82.0,
             'hps': 2.5,
             'HP': 1.8,
@@ -225,7 +253,7 @@ export class Billposter extends Assist {
 }
 
 export class Ringmaster extends Assist {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 9389;
         img = img || "lgstick.png";
         armor = armor || Utils.getArmorByName("Rimyth Set");
@@ -283,14 +311,14 @@ export class Ringmaster extends Assist {
 }
 
 export class Acrobat extends Vagrant {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 15, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 9098;
         img = img || "layeredbow.png";
         armor = armor || Utils.getArmorByName("Cruiser Set");
         mainhand = mainhand || Utils.getItemByName("Layered Bow");
         constants = constants || {
             'skills': [Utils.getSkillByName("Junk Arrow"),
-                Utils.getSkillByName("Silent Shot"),
+                Utils.getSkillByName("Slow Step"),
                 Utils.getSkillByName("Arrow Rain")
             ],
             'buffs': [Utils.getSkillByName("Perfect Block"),
@@ -343,7 +371,7 @@ export class Acrobat extends Vagrant {
 }
 
 export class Jester extends Acrobat {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 3545;
         img = img || "lgyoyo.png";
         armor = armor || Utils.getArmorByName("Neis Set");
@@ -355,8 +383,11 @@ export class Jester extends Acrobat {
             ],
             'buffs': [Utils.getSkillByName("Critical Swing"),
                 Utils.getSkillByName("Enchant Absorb"),
+                Utils.getSkillByName("Enchant Blood"),
+                Utils.getSkillByName("Enchant Poison"),
                 Utils.getSkillByName("Yo-Yo Mastery"),
-                Utils.getSkillByName("Bow Mastery")
+                Utils.getSkillByName("Bow Mastery"),
+                Utils.getSkillByName("Perfect Block")
             ],
             'attackSpeed': 82.0,
             'hps': 2.6,
@@ -403,7 +434,7 @@ export class Jester extends Acrobat {
 }
 
 export class Ranger extends Acrobat {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 9295;
         img = img || "lgbow.png";
         armor = armor || Utils.getArmorByName("Tyrent Set");
@@ -415,8 +446,8 @@ export class Ranger extends Acrobat {
             ],
             'buffs': [Utils.getSkillByName("Critical Shot"),
                 Utils.getSkillByName("Nature"),
-                Utils.getSkillByName("Yo-Yo Mastery"),
-                Utils.getSkillByName("Bow Mastery")
+                Utils.getSkillByName("Bow Mastery"),
+                Utils.getSkillByName("Perfect Block")
             ],
             'attackSpeed': 77.0,
             'hps': 2.14,
@@ -463,7 +494,7 @@ export class Ranger extends Acrobat {
 }
 
 export class Magician extends Vagrant {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 15, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 9581;
         img = img || "opelwand.png";
         armor = armor || Utils.getArmorByName("Teba Set");
@@ -518,7 +549,7 @@ export class Magician extends Vagrant {
 }
 
 export class Psykeeper extends Magician {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 5709;
         img = img || "lgwand.png";
         armor = armor || Utils.getArmorByName("Mekatro Set");
@@ -526,7 +557,8 @@ export class Psykeeper extends Magician {
         constants = constants || {
             'skills': [Utils.getSkillByName("Psychic Bomb"),
                 Utils.getSkillByName("Spirit Bomb"),
-                Utils.getSkillByName("Psychic Square")
+                Utils.getSkillByName("Psychic Square"),
+                Utils.getSkillByName("Maximum Crisis")
             ],
             'buffs': [],
             'attackSpeed': 67.0,
@@ -573,7 +605,7 @@ export class Psykeeper extends Magician {
 }
 
 export class Elementor extends Magician {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 9150;
         img = img || "lgstaff.png";
         armor = armor || Utils.getArmorByName("Shabel Set");
@@ -633,18 +665,19 @@ export class Elementor extends Magician {
 }
 
 export class Mercenary extends Vagrant {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 15, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 764;
         img = img || "woodensword.png";
         armor = armor || Utils.getArmorByName("Panggril Set");
         mainhand = mainhand || Utils.getItemByName("Flam Sword");
         constants = constants || {
-            'skills': [Utils.getSkillByName("Shield Bash"),
+            'skills': [Utils.getSkillByName("Slash"),
                 Utils.getSkillByName("Keenwheel"),
                 Utils.getSkillByName("Guillotine")
             ],
             'buffs': [Utils.getSkillByName("Blazing Sword"),
-                Utils.getSkillByName("Sword Mastery")
+                Utils.getSkillByName("Sword Mastery"),
+                Utils.getSkillByName("Protection")
             ],
             'attackSpeed': 77.0,
             'hps': 4,
@@ -690,7 +723,7 @@ export class Mercenary extends Vagrant {
 }
 
 export class Blade extends Mercenary {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 2246;
         img = img || "lgaxe.png";
         armor = armor || Utils.getArmorByName("Hanes Set");
@@ -698,12 +731,14 @@ export class Blade extends Mercenary {
         offhand = offhand || Utils.getItemByName("Legendary Golden Axe");
         constants = constants || {
             'skills': [Utils.getSkillByName("Blade Dance"),
-                Utils.getSkillByName("Hawk Attack"),
+                Utils.getSkillByName("Silent Strike"),
                 Utils.getSkillByName("Cross Strike"),
             ],
             'buffs': [Utils.getSkillByName("Berserk"),
+                Utils.getSkillByName("Protection"),
                 Utils.getSkillByName("Smite Axe"),
                 Utils.getSkillByName("Axe Mastery"),
+                Utils.getSkillByName("Blazing Sword"),
                 Utils.getSkillByName("Sword Mastery")],
             'attackSpeed': 87.0,
             'hps': 3,
@@ -749,7 +784,7 @@ export class Blade extends Mercenary {
 }
 
 export class Knight extends Mercenary {
-    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 1, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
+    constructor(str = 15, sta = 15, int = 15, dex = 15, level = 60, constants = null, img = null, mainhand = null, offhand = null, armor = null, jobId = null) {
         jobId = jobId || 5330;
         img = img || "lgswt.png";
         armor = armor || Utils.getArmorByName("Extro Set");
@@ -760,8 +795,10 @@ export class Knight extends Mercenary {
                 Utils.getSkillByName("Earth Divider")
             ],
             'buffs': [Utils.getSkillByName("Rage"),
+                Utils.getSkillByName("Heart of Fury"),
                 Utils.getSkillByName("Smite Axe"),
                 Utils.getSkillByName("Axe Mastery"),
+                Utils.getSkillByName("Blazing Sword"),
                 Utils.getSkillByName("Sword Mastery"),
                 Utils.getSkillByName("Protection")],
             'attackSpeed': 77.0,

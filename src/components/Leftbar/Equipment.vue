@@ -15,7 +15,7 @@
             </select>
           </td>
           <td>
-            <button class="btn-plus" @click="character.armor = null">x</button>
+            <button class="btn-plus" @click="character.armor = null;character.armorUpgrade = null;character.armorBonus1 = null;character.armorBonus2 = null;character.armorBonus3= null;character.armorBonus4 = null">x</button>
           </td>
         </tr>
 
@@ -28,6 +28,43 @@
                 +{{ i }}
               </option>
             </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td><h5>Armor Bonus</h5></td>
+          <td>
+            <select v-model="character.armorBonus1" id="equipment-select" :disabled=!character.armor>
+              <option disabled value="">Select a stats bonus...</option>
+              <option v-for="stat in bonusStats" :value="stat" :key="stat.id">
+                +{{ stat.abilities[0].add }} {{ stat.abilities[0].parameter }}
+                {{ stat.abilities[1]?.add }} {{ stat.abilities[1]?.parameter }}
+              </option>
+            </select>
+            <select v-model="character.armorBonus2" id="equipment-select" :disabled=!character.armorBonus1>
+              <option disabled value="">Select a stats bonus...</option>
+              <option v-for="stat in bonusStats" :value="stat" :key="stat.id">
+                +{{ stat.abilities[0].add }} {{ stat.abilities[0].parameter }}
+                {{ stat.abilities[1]?.add }} {{ stat.abilities[1]?.parameter }}
+              </option>
+            </select>
+            <select v-model="character.armorBonus3" id="equipment-select" :disabled=!character.armorBonus2>
+              <option disabled value="">Select a stats bonus...</option>
+              <option v-for="stat in bonusStats" :value="stat" :key="stat.id">
+                +{{ stat.abilities[0].add }} {{ stat.abilities[0].parameter }}
+                {{ stat.abilities[1]?.add }} {{ stat.abilities[1]?.parameter }}
+              </option>
+            </select>
+            <select v-model="character.armorBonus4" id="equipment-select" :disabled=!character.armorBonus3>
+              <option disabled value="">Select a stats bonus...</option>
+              <option v-for="stat in bonusStats" :value="stat" :key="stat.id">
+                +{{ stat.abilities[0].add }} {{ stat.abilities[0].parameter }}
+                {{ stat.abilities[1]?.add }} {{ stat.abilities[1]?.parameter }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-plus" @click="character.armorBonus1 = null;character.armorBonus2 = null;character.armorBonus3= null;character.armorBonus4 = null">x</button>
           </td>
         </tr>
 
@@ -57,6 +94,22 @@
         </tr>
 
         <tr>
+          <td><h5>Mainhand Bonus</h5></td>
+          <td>
+            <select v-model="character.weaponBonus1" id="equipment-select" :disabled=!character.mainhand>
+              <option disabled value="">Select a stats bonus...</option>
+              <option v-for="stat in bonusStats" :value="stat" :key="stat.id">
+                +{{ stat.abilities[0].add }} {{ stat.abilities[0].parameter }}
+                {{ stat.abilities[1]?.add }} {{ stat.abilities[1]?.parameter }}
+              </option>
+          </select>
+          </td>
+          <td>
+            <button class="btn-plus" @click="character.weaponBonus1 = null">x</button>
+          </td>
+        </tr>
+
+        <tr>
           <td><h5>Offhand</h5></td>
           <td>
             <select v-model="character.offhand" id="equipment-select" :disabled=!canUseOffhand>
@@ -80,6 +133,22 @@
                 +{{ i }}
               </option>
             </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td><h5>Offhand Bonus</h5></td>
+          <td>
+            <select v-model="character.weaponBonus2" id="equipment-select" :disabled=!character.offhand>
+              <option disabled value="">Select a stats bonus...</option>
+              <option v-for="stat in bonusStats" :value="stat" :key="stat.id">
+                +{{ stat.abilities[0].add }} {{ stat.abilities[0].parameter }}
+                {{ stat.abilities[1]?.add }} {{ stat.abilities[1]?.parameter }}
+              </option>
+          </select>
+          </td>
+          <td>
+            <button class="btn-plus" @click="character.weaponBonus2 = null">x</button>
           </td>
         </tr>
 
@@ -175,9 +244,78 @@
         </tr>
 
         <tr>
+          <td><h5>Pet</h5></td>
+          <td>
+            <select v-model="character.pet" id="equipment-select">
+              <option disabled value="">Select a pet...</option>
+              <option v-for="pet in pets" :value="pet" :key="pet.id">
+                {{ pet.type }} <!--({{ pet.abilities[0].parameter }})-->
+              </option>
+            </select>
+            <select v-model="character.pete" id="equipment-select" :disabled=!character.pet>
+              <option disabled value="">Select a pet...</option>
+              <option v-for="pete in computedpetes" :value="pete" :key="pete.id">
+                Lv.{{ pete.grade }}: +{{ pete.abilities[0].add }} {{ pete.abilities[0].parameter }} 
+              </option>
+            </select>
+            <select v-model="character.petd" id="equipment-select" :disabled=!character.pete>
+              <option disabled value="">Select a pet...</option>
+              <option v-for="petd in computedpetds" :value="petd" :key="petd.id">
+                Lv.{{ petd.grade }}: +{{ petd.abilities[0].add }} {{ petd.abilities[0].parameter }} 
+              </option>
+            </select>
+            <select v-model="character.petc" id="equipment-select" :disabled=!character.petd>
+              <option disabled value="">Select a pet...</option>
+              <option v-for="petc in computedpetcs" :value="petc" :key="petc.id">
+                Lv.{{ petc.grade }}: +{{ petc.abilities[0].add }} {{ petc.abilities[0].parameter }} 
+              </option>
+            </select>
+            <select v-model="character.petb" id="equipment-select" :disabled=!character.petc>
+              <option disabled value="">Select a pet...</option>
+              <option v-for="petb in computedpetbs" :value="petb" :key="petb.id">
+                Lv.{{ petb.grade }}: +{{ petb.abilities[0].add }} {{ petb.abilities[0].parameter }} 
+              </option>
+            </select>
+            <select v-model="character.peta" id="equipment-select" :disabled=!character.petb>
+              <option disabled value="">Select a pet...</option>
+              <option v-for="peta in computedpetas" :value="peta" :key="peta.id">
+                Lv.{{ peta.grade }}: +{{ peta.abilities[0].add }} {{ peta.abilities[0].parameter }} 
+              </option>
+            </select>
+            <select v-model="character.petx" id="equipment-select" :disabled=!character.peta>
+              <option disabled value="">Select a pet...</option>
+              <option v-for="petx in computedpetxs" :value="petx" :key="petx.id">
+                Lv.{{ petx.grade }}: +{{ petx.abilities[0].add }} {{ petx.abilities[0].parameter }} 
+              </option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-plus" @click="character.pet = null;character.pete = null;character.petd = null;character.petc = null;character.petb = null;character.peta = null;character.petx = null">x</button>
+          </td>
+        </tr> 
+
+        <tr>
           <td><h5>Suit Piercing</h5></td>
           <td>
-            <select v-model="character.suitPiercing" id="equipment-select">
+            <select v-model="character.suitPiercing1" id="equipment-select">
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in piercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.suitPiercing2" id="equipment-select" :disabled=!character.suitPiercing1>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in piercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.suitPiercing3" id="equipment-select" :disabled=!character.suitPiercing2>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in piercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.suitPiercing4" id="equipment-select" :disabled=!character.suitPiercing3>
               <option disabled value="">Select a card...</option>
               <option v-for="card in piercingCards" :value="card" :key="card.id">
                 {{ card.name.en }}
@@ -185,7 +323,77 @@
           </select>
           </td>
           <td>
-            <button class="btn-plus" @click="character.suitPiercing = null">x</button>
+            <button class="btn-plus" @click="character.suitPiercing1 = null;character.suitPiercing2 = null;character.suitPiercing3 = null;character.suitPiercing4 = null">x</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><h5>Weapon Piercing</h5></td>
+          <td>
+            <select v-model="character.weapPiercing1" id="equipment-select">
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+                {{ getCardText(character.card) }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing2" id="equipment-select" :disabled=!character.weapPiercing1>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing3" id="equipment-select" :disabled=!character.weapPiercing2>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing4" id="equipment-select" :disabled=!character.weapPiercing3>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing5" id="equipment-select" :disabled=!character.weapPiercing4>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing6" id="equipment-select" :disabled=!character.weapPiercing5>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing7" id="equipment-select" :disabled=!character.weapPiercing6>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing8" id="equipment-select" :disabled=!character.weapPiercing7>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing9" id="equipment-select" :disabled=!character.weapPiercing8>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+            <select v-model="character.weapPiercing10" id="equipment-select" :disabled=!character.weapPiercing9>
+              <option disabled value="">Select a card...</option>
+              <option v-for="card in weapPiercingCards" :value="card" :key="card.id">
+                {{ card.name.en }}
+              </option>
+          </select>
+          </td>
+          <td>
+            <button class="btn-plus" @click="character.weapPiercing1 = null;character.weapPiercing2 = null;character.weapPiercing3 = null;character.weapPiercing4 = null;character.weapPiercing5 = null;character.weapPiercing6 = null;character.weapPiercing7 = null;character.weapPiercing8 = null;character.weapPiercing9 = null;character.weapPiercing10 = null">x</button>
           </td>
         </tr>
 
@@ -209,6 +417,15 @@ export default {
       necklaces: [],
       rings: [],
       cloaks: [],
+      pets: [],
+      petes: [],
+      petds: [],
+      petcs: [],
+      petbs: [],
+      petas: [],
+      petxs: [],
+      bonusStats: [],
+      weapPiercingCards: [],
       piercingCards: [],
       shields: [],
       offhands: [],
@@ -221,8 +438,17 @@ export default {
     this.rings = Utils.getJewelery("ring").sort(Utils.sortByName);
     this.necklaces = Utils.getJewelery("necklace").sort(Utils.sortByName);
     this.piercingCards = Utils.getPiercingCards().sort(Utils.sortByName);
+    this.weapPiercingCards = Utils.getWeapPiercingCards().sort(Utils.sortByName);
     this.shields = Utils.getShields().sort(Utils.sortByLevel);
     this.cloaks = Utils.getCloaks().sort(Utils.sortByName);
+    this.pets = Utils.getPets().sort(Utils.sortByName);
+    this.petes = Utils.getPetes().sort(Utils.sortByName);
+    this.petds = Utils.getPetds().sort(Utils.sortByName);
+    this.petcs = Utils.getPetcs().sort(Utils.sortByName);
+    this.petbs = Utils.getPetbs().sort(Utils.sortByName);
+    this.petas = Utils.getPetas().sort(Utils.sortByName);
+    this.petxs = Utils.getPetxs().sort(Utils.sortByName);
+    this.bonusStats = Utils.getBonusStats().sort(Utils.sortByName);
 
     this.offhands = [...this.shields];
     if (this.character instanceof Blade) {
@@ -248,7 +474,6 @@ export default {
         this.character.mainhandUpgrade = equipment.mainhandUpgrade;
         this.character.offhandUpgrade = equipment.offhandUpgrade;
         this.character.mainhand = this.byId(this.weapons, equipment.mainhand) || Utils.getItemByName("Wooden Sword");
-        
         this.character.offhand = this.byId(this.offhands.concat(this.weapons), equipment.offhand);
         this.character.earringR = this.byId(this.earrings, equipment.earringR);
         this.character.earringL = this.byId(this.earrings, equipment.earringL);
@@ -256,7 +481,31 @@ export default {
         this.character.ringR = this.byId(this.rings, equipment.ringR);
         this.character.ringL = this.byId(this.rings, equipment.ringL);
         this.character.cloak = this.byId(this.cloaks, equipment.cloak);
-        this.character.suitPiercing = this.byId(this.piercingCards, equipment.suitPiercing);
+        this.character.pet = this.byId(this.pets, equipment.pet);
+        this.character.pete = this.byId(this.petes, equipment.pete);
+        this.character.petd = this.byId(this.petds, equipment.petd);
+        this.character.petc = this.byId(this.petcs, equipment.petc);
+        this.character.petb = this.byId(this.petbs, equipment.petb);
+        this.character.peta = this.byId(this.petas, equipment.peta);
+        this.character.petx = this.byId(this.petxs, equipment.petx);
+        this.character.suitPiercing1 = this.byId(this.piercingCards, equipment.suitPiercing);
+        this.character.suitPiercing2 = this.byId(this.piercingCards, equipment.suitPiercing);
+        this.character.suitPiercing3 = this.byId(this.piercingCards, equipment.suitPiercing);
+        this.character.suitPiercing4 = this.byId(this.piercingCards, equipment.suitPiercing);
+        this.character.weapPiercing1 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing2 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing3 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing4 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing5 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing6 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing7 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing8 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing9 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.weapPiercing10 = this.byId(this.WeapPiercingCards, equipment.weapPiercing);
+        this.character.armorBonus1 = this.byId(this.bonusStats, equipment.armorBonus);
+        this.character.armorBonus2 = this.byId(this.bonusStats, equipment.armorBonus);
+        this.character.armorBonus3 = this.byId(this.bonusStats, equipment.armorBonus);
+        this.character.armorBonus4 = this.byId(this.bonusStats, equipment.armorBonus);
       }, 10);
     },
     byId(arr, id) {
@@ -279,6 +528,43 @@ export default {
         //text += ")";   
       }
       return text;
+    },
+    getCardText(card) {
+      let text = "";
+      if(card) {
+        //text = cloak.name.en + " (";
+        card.abilities.forEach(ability => {
+          let effect = " ";
+          effect += ability.parameter;
+          let add = ability.add;
+          effect += "+" + add;
+          if (ability.rate) effect += "%";
+          effect += " ";
+          text += effect;
+        });
+        //text += ")";   
+      }
+      return text;
+    }
+  },
+  computed: {
+    computedpetes: function() {
+      return this.petes.filter(pete => !pete.type.indexOf(this.character.pet?.type))
+    },
+    computedpetds: function() {
+      return this.petds.filter(petd => !petd.type.indexOf(this.character.pet?.type))
+    },
+    computedpetcs: function() {
+      return this.petcs.filter(petc => !petc.type.indexOf(this.character.pet?.type))
+    },
+    computedpetbs: function() {
+      return this.petbs.filter(petb => !petb.type.indexOf(this.character.pet?.type))
+    },
+    computedpetas: function() {
+      return this.petas.filter(peta => !peta.type.indexOf(this.character.pet?.type))
+    },
+    computedpetxs: function() {
+      return this.petxs.filter(petx => !petx.type.indexOf(this.character.pet?.type))
     }
   },
   watch: {

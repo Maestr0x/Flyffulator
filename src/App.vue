@@ -40,7 +40,7 @@
         </div>
 
         <div class="footer">
-          <h5>Flyff simulator built specifically for <a href='https://flyff-api.sniegu.fr/'>Flyff Universe</a> by Frostiae#2809</h5>
+          <h5>Flyff simulator built specifically for <a href='https://flyff-api.sniegu.fr/'>Flyff Universe</a> by Frostiae#2809, Nitrogenetica, and Kirides</h5>
           <h5 style="opacity: 0.5;">If you would like to follow development or contribute, visit the <a href="https://github.com/Frostiae/Flyffulator">GitHub</a> page.</h5>
         </div>
       </div>
@@ -66,6 +66,10 @@ import { Utils } from './calc/utils.js'
 import { Billposter, Vagrant } from './calc/jobs'
 
 const utils = new Utils()
+
+function escapeRegex(string) {
+    return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+}
 
 export default {
   name: 'App',
@@ -129,9 +133,15 @@ export default {
     'character.ref.assistBuffs'() { this.updateCharacter() },
     'character.ref.premiumItems'() { this.updateCharacter() },
     'character.ref.mainhand'() { this.updateCharacter() },
+    'character.ref.weaponBonus1'() { this.updateCharacter() },
+    'character.ref.weaponBonus2'() { this.updateCharacter() },
     'character.ref.offhand'() { this.updateCharacter() },
     'character.ref.armor'() { this.updateCharacter() },
     'character.ref.armorUpgrade'() { this.updateCharacter() },
+    'character.ref.armorBonus1'() { this.updateCharacter() },
+    'character.ref.armorBonus2'() { this.updateCharacter() },
+    'character.ref.armorBonus3'() { this.updateCharacter() },
+    'character.ref.armorBonus4'() { this.updateCharacter() },
     'character.ref.mainhandUpgrade'() { this.updateCharacter() },
     'character.ref.offhandUpgrade'() { this.updateCharacter() },
     'character.ref.earringR'() { this.updateCharacter() },
@@ -139,8 +149,28 @@ export default {
     'character.ref.ringR'() { this.updateCharacter() },
     'character.ref.ringL'() { this.updateCharacter() },
     'character.ref.cloak'() { this.updateCharacter() },
+    'character.ref.pet'() { this.updateCharacter() },
+    'character.ref.pete'() { this.updateCharacter() },
+    'character.ref.petd'() { this.updateCharacter() },
+    'character.ref.petc'() { this.updateCharacter() },
+    'character.ref.petb'() { this.updateCharacter() },
+    'character.ref.peta'() { this.updateCharacter() },
+    'character.ref.petx'() { this.updateCharacter() },
     'character.ref.necklace'() { this.updateCharacter() },
-    'character.ref.suitPiercing'() { this.updateCharacter() },
+    'character.ref.suitPiercing1'() { this.updateCharacter() },
+    'character.ref.suitPiercing2'() { this.updateCharacter() },
+    'character.ref.suitPiercing3'() { this.updateCharacter() },
+    'character.ref.suitPiercing4'() { this.updateCharacter() },
+    'character.ref.weapPiercing1'() { this.updateCharacter() },
+    'character.ref.weapPiercing2'() { this.updateCharacter() },
+    'character.ref.weapPiercing3'() { this.updateCharacter() },
+    'character.ref.weapPiercing4'() { this.updateCharacter() },
+    'character.ref.weapPiercing5'() { this.updateCharacter() },
+    'character.ref.weapPiercing6'() { this.updateCharacter() },
+    'character.ref.weapPiercing7'() { this.updateCharacter() },
+    'character.ref.weapPiercing8'() { this.updateCharacter() },
+    'character.ref.weapPiercing9'() { this.updateCharacter() },
+    'character.ref.weapPiercing10'() { this.updateCharacter() },
     'character.ref.shield'() { this.updateCharacter() },
   },
   created() { this.updateCharacter() },
@@ -184,29 +214,34 @@ export default {
       
       this.focusMonster = this.monsters.find(monster => monster.level >= this.character.ref.level) || this.monsters.slice(-1)[0];
     },
-    getImageUrl(img) {
-      var images = require.context('./assets/images/', false, /\.png$/)
-      return images('./' + img)
+    getImageUrl(img, store) {
+      const rx = new RegExp(escapeRegex(img), 'i')
+      store = store || (import.meta.glob('@/**/*.png', {eager: true}));
+      for (const i in store) {
+        if (i.match(rx)) {
+            let url = store[i].default;
+            if (url.startsWith('.') || url.startsWith('/')) {
+              return './' + store[i].default.trimStart('.').trimStart('/');  
+            }
+            return store[i].default;
+          }
+        }
+      return this.getImageUrl('syssysquentskil')
     },
     getIconUrl(img) {
-      try {
-        var images = require.context('./assets/images/Icons/Items', false, /\.png$/)
-        return images('./' + img)
-      } catch(error) {
-        // dummy icon if icon couldn't be found
-        return images('./' + "syssysqueheadrb.png")
-      }
+      const itemIconImages = import.meta.globEager('@/assets/images/Icons/Items/**/*.png')
+      return this.getImageUrl(img, itemIconImages)
     },
     getSkillIconUrl(img) {
-      var images = require.context('./assets/images/Icons/Skills/colored', false, /\.png$/)
-      return images('./' + img)
+      const skillIconImages = import.meta.globEager('@/assets/images/Icons/Skills/colored/**/*.png')
+      return this.getImageUrl(img, skillIconImages)
     }
   }
 }
 
 function validateInput(character) {
   character.level = character.level < 1 ? 1 : character.level;
-  character.level = character.level > 120 ? 120 : character.level;
+  character.level = character.level > 140 ? 140 : character.level;
   character.str = character.str < 1 ? 1 : character.str;
   character.sta = character.sta < 1 ? 1 : character.sta;
   character.dex = character.dex < 1 ? 1 : character.dex;

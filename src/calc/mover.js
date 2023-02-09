@@ -12,7 +12,7 @@ export class Mover {
         this.armorUpgradeBonus = Utils.getUpgradeBonus(this.armorUpgrade);
         this.mainhandUpgradeBonus = Utils.getUpgradeBonus(this.mainhandUpgrade);
         this.offhandUpgradeBonus = Utils.getUpgradeBonus(this.offhandUpgrade);
-        
+
         this.applyBuffs();
         this.applyPremiumItems();
         this.applyBaseStats();
@@ -42,19 +42,6 @@ export class Mover {
     }
 
     applyBuffs() {
-        // RM/Assist Buffs
-        if (this.assistBuffs) {
-            for (let buff of Moverutils.assistBuffs) {
-                if (this.activeBuffs.find(b => b.id == buff.id)) continue;
-                buff.enabled = true;
-                this.activeBuffs.push(buff);
-            }
-        } else {
-            this.activeBuffs = this.activeBuffs.filter((val, index, arr) => {
-                return !Moverutils.assistBuffs.find(b => b.id == val.id);
-            });
-        }
-
         // Self Buffs
         if (this.selfBuffs) {
             for (let buff of this.constants.buffs) {
@@ -66,6 +53,25 @@ export class Mover {
         } else {
             this.activeBuffs = this.activeBuffs.filter((val, index, arr) => {
                 return !this.constants.buffs.find(b => b.id == val.id);
+            });
+        }
+
+        // Remove any buffs not matching the selected weapon
+        this.activeBuffs = this.activeBuffs.filter(buff => buff.weapon  == null // some buffs have no weapon
+        || (this.offhand != null && this.offhand.subcategory != null && buff.weapon.includes(this.offhand.subcategory)) // offhand logic for shield
+        || buff.weapon.includes(this.mainhand.subcategory) // buff weapon doesn't match select mainhand weapon
+        );
+
+        // RM/Assist Buffs
+        if (this.assistBuffs) {
+            for (let buff of Moverutils.assistBuffs) {
+                if (this.activeBuffs.find(b => b.id == buff.id)) continue;
+                buff.enabled = true;
+                this.activeBuffs.push(buff);
+            }
+        } else {
+            this.activeBuffs = this.activeBuffs.filter((val, index, arr) => {
+                return !Moverutils.assistBuffs.find(b => b.id == val.id);
             });
         }
 
@@ -109,7 +115,7 @@ export class Mover {
         }
 
         const attackerDex = 15; // Fixed to 15 in the stat window in-game
-        
+
         const blockB = Utils.clamp(Math.floor((this.dex + attackerDex + 2) * ((this.dex - attackerDex) / 800.0)), 0, 10);
         const blockRate = Math.floor((this.dex / 8.0) * this.constants.block + extra);
         const final = Math.max(blockB + blockRate, 0);
@@ -129,11 +135,11 @@ export class Mover {
             0.88, 0.96, 1.04, 1.12, 1.20,
             1.30, 1.38, 1.50
         ];
-        
+
         const minBaseSpeed = 0.125;
         const maxBaseSpeed = 2.0;
         const baseSpeedScaling = 200.0;
-        
+
         const baseDividend = baseSpeedScaling * minBaseSpeed;
         const maxBaseScaledSpeed = baseSpeedScaling - baseDividend / maxBaseSpeed;
 
@@ -251,7 +257,7 @@ export class Mover {
         var min = 0;
         var max = 0;
 
-        if (this.offhand && this.offhand.subcategory == "shield") {    
+        if (this.offhand && this.offhand.subcategory == "shield") {
             min += this.offhand.minDefense;
             max += this.offhand.maxDefense;
 
@@ -270,7 +276,7 @@ export class Mover {
                 let item = Utils.getItemById(part);
                 let _min = item.minDefense;
                 let _max = item.maxDefense;
-                
+
                 if (this.armorUpgradeBonus != null) {
                     _min *= 1 + this.armorUpgradeBonus.suitDefense / 100;
                     _max *= 1 + this.armorUpgradeBonus.suitDefense / 100;
@@ -279,7 +285,7 @@ export class Mover {
                     _min += upgradeValue;
                     _max += upgradeValue;
                 }
-                
+
                 min += _min;
                 max += _max;
             });
@@ -343,7 +349,7 @@ export class Mover {
 
     /**
      * Returns the amount of <param> found in all equipment and all buffs.
-     * @param param The parameter to look for in all equipment and buffs 
+     * @param param The parameter to look for in all equipment and buffs
      */
     getExtraParam(param, rate = false) {
         return this.getExtraGearParam(param, rate) + this.getExtraBuffParam(param, rate);
@@ -367,14 +373,34 @@ export class Mover {
             if (bonus) add = bonus.ability.add;
         }
 
-        // Suit Piercing
-        if (this.suitPiercing) {
-            const ability = this.suitPiercing.abilities[0]; // Piercing cards only have one ability
+        // Suit Piercing - 4 slots selected individually
+        if (this.suitPiercing1) {
+            const ability = this.suitPiercing1.abilities[0]; // Piercing cards only have one ability
             if (params.includes(ability.parameter) && ability.rate == rate) {
-                add += ability.add * 4; // 4 card piercing slots
+                add += ability.add;
             }
         }
 
+        if (this.suitPiercing2) {
+            const ability = this.suitPiercing2.abilities[0]; // Piercing cards only have one ability
+            if (params.includes(ability.parameter) && ability.rate == rate) {
+                add += ability.add;
+            }
+        }
+
+        if (this.suitPiercing3) {
+            const ability = this.suitPiercing3.abilities[0]; // Piercing cards only have one ability
+            if (params.includes(ability.parameter) && ability.rate == rate) {
+                add += ability.add;
+            }
+        }
+
+        if (this.suitPiercing4) {
+            const ability = this.suitPiercing4.abilities[0]; // Piercing cards only have one ability
+            if (params.includes(ability.parameter) && ability.rate == rate) {
+                add += ability.add;
+            }
+        }
         // Armor upgrade set effects
         if (this.armorUpgradeBonus != null) {
             const bonus = this.armorUpgradeBonus.setAbilities.find(a => params.includes(a.parameter) && a.rate == rate);
@@ -406,6 +432,78 @@ export class Mover {
                 const bonus = this.offhand.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
                 if (bonus) add += bonus.add;
             }
+        }
+
+        // Stats mainhand bonus addition
+        if (this.weaponBonus1?.abilities) {
+            const bonus = this.weaponBonus1.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        // Stats offhand bonus addition
+        if (this.weaponBonus2?.abilities) {
+            const bonus = this.weaponBonus2.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        // Stats Armor Bonus - 4 slots selected individually
+        if (this.armorBonus1?.abilities) {
+            const bonus = this.armorBonus1.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.armorBonus2?.abilities) {
+            const bonus = this.armorBonus2.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.armorBonus3?.abilities) {
+            const bonus = this.armorBonus3.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.armorBonus4?.abilities) {
+            const bonus = this.armorBonus4.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        // Weapon Piercing - 10 slots selected individually
+        if (this.weapPiercing1?.abilities) {
+            const bonus = this.weapPiercing1.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing2 && this.weapPiercing2.abilities) {
+            const bonus = this.weapPiercing2.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing3 && this.weapPiercing3.abilities) {
+            const bonus = this.weapPiercing3.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing4 && this.weapPiercing4.abilities) {
+            const bonus = this.weapPiercing4.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing5 && this.weapPiercing5.abilities) {
+            const bonus = this.weapPiercing5.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing6 && this.weapPiercing6.abilities) {
+            const bonus = this.weapPiercing6.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing7 && this.weapPiercing7.abilities) {
+            const bonus = this.weapPiercing7.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing8 && this.weapPiercing8.abilities) {
+            const bonus = this.weapPiercing8.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing9 && this.weapPiercing9.abilities) {
+            const bonus = this.weapPiercing9.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+        if (this.weapPiercing10 && this.weapPiercing10.abilities) {
+            const bonus = this.weapPiercing10.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
         }
 
         return add;
@@ -446,12 +544,48 @@ export class Mover {
             if (bonus) add += bonus.add;
         }
 
+        // Pet added here
+        if(this.pet && this.pet.abilities) {
+            const bonus = this.pet.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        if(this.pete && this.pete.abilities) {
+            const bonus = this.pete.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        if(this.petd && this.petd.abilities) {
+            const bonus = this.petd.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        if(this.petc && this.petc.abilities) {
+            const bonus = this.petc.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        if(this.petb && this.petb.abilities) {
+            const bonus = this.petb.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        if(this.peta && this.peta.abilities) {
+            const bonus = this.peta.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
+        if(this.petx && this.petx.abilities) {
+            const bonus = this.petx.abilities.find(a => params.includes(a.parameter) && a.rate == rate);
+            if (bonus) add += bonus.add;
+        }
+
         return add;
     }
 
     /**
      * Returns additions to a specific value from your active & enabled buffs
-     * @param param The value to find additions for 
+     * @param param The value to find additions for
      */
     buffParam(param, rate=false) {
         let add = 0;
@@ -461,7 +595,7 @@ export class Mover {
             if (!buff.enabled) continue;    // Don't add disabled buffs
             let maxLevel = buff.levels.slice(-1)[0];
             let abilities = maxLevel.abilities;
-            
+
             for (let ability of abilities) {
                 if (params.includes(ability.parameter) && ability.rate == rate) {
                     add += ability.add;
@@ -484,7 +618,7 @@ export class Mover {
 
     /**
      * Returns additions to a specific value from your active & enabled premium items
-     * @param param The value to find additions for 
+     * @param param The value to find additions for
      */
      premiumItemParam(param, rate=false) {
         let add = 0;
@@ -493,7 +627,7 @@ export class Mover {
         for (let premiumItem of this.activePremiumItems) {
             if (!premiumItem.enabled) continue;    // Don't add disabled buffs
             let abilities = premiumItem.abilities;
-            
+
             for (let ability of abilities) {
                 if (params.includes(ability.parameter) && ability.rate == rate) {
                     add += ability.add;
@@ -570,7 +704,7 @@ export class Mover {
         } else {
             const maxLevel = this.constants.skills[skillIndex].levels.slice(-1)[0];
             damage = this.getDamage(monster, skillIndex);
-            
+
             const frames = 55;
             const hitsPerSec = (30 / frames) * (this.DCT / 100);
             let cooldown = maxLevel.cooldown;
@@ -645,10 +779,38 @@ export class Mover {
 
             damage -= Moverutils.calcDamageDefense(defense, damage);
             damage *= this.getDamageMultiplier(true);   // TODO: Try moving this up if inaccuracies remain after fixing MDef formula
+
+            // skill that do have multiple hits in the animation, must be multiplied after the defense calculation to be accurate
+            damage *= this.getHitsForSkill(skill.id);
         }
 
         damage *= deltaFactor;
         return damage < 1 ? 1 : damage;
+    }
+
+    /**
+     * Returns number of this for a given skill
+     * 
+     * @param {int} skillId 
+     * @returns the number of hits
+     */
+    getHitsForSkill(skillId) {
+        var hits = 1;
+        switch (skillId) {
+            case 7023: // Multi-Stab
+                hits = 7; // Hits 7 times in the animation
+                break;
+            case 1526: // Junk Arrow
+                hits = 4; // Hits 4 times
+                break;
+            case 9538: // Spring Attack
+                hits = 5; 
+                break;
+            case 4448: // Belial Smashing
+                hits = 5;
+                break;
+        }
+        return hits;
     }
 
     getDamageMultiplier(skill=false) {
@@ -684,7 +846,7 @@ export class Mover {
 
     /**
      * Calculates the raw damage of a skill.
-     * @param skill The skill to calculate raw damage for 
+     * @param skill The skill to calculate raw damage for
      */
     getSkillDmg(skill) {
         const maxLevel = skill.levels.slice(-1)[0]; // Cannot use at() because of Safari compatibility
@@ -707,7 +869,7 @@ export class Mover {
 
         // Calculate base damage based on scaling per stat
         const base = maxLevel.scalingParameters.reduce((total, current) => total += this[current.stat] * current.scale, 0);
-    
+
         // CMover::GetMeleeSkillPower()
         const level = skill.levels.length;
         let powerMin = ((weaponMin + (maxLevel.minAttack + 0) * 5 + base - 20) * (16 + level) / 13);
@@ -742,12 +904,8 @@ export class Mover {
             case 5041: // Asal
                 final += (((this.str / 10) * level) * (5 + this.mp / 10) + 150);
                 break;
-            case 7023: // Multi-Stab
-                final *= 7; // Hits 7 times in the animation
-                break;
             case 1526: // Junk Arrow
                 final *= maxLevel.probability / 100.0;
-                final *= 4; // Hits 4 times
                 break;
         }
 
@@ -781,7 +939,7 @@ export class Mover {
     getOptimalAutoRatio(target) {
         let dpsValues = [];
         let ratios = []
-        
+
         // Calculating for at least level 15
         this.level = this.level < 15 ? 15 : this.level;
 

@@ -157,7 +157,7 @@ export default {
           axisBorder: {
             show: false
           },
-          categories: ["70", "80", "90", "100", "110", "120"]
+          categories: ["70", "80", "90", "100", "110", "120", "140"]
         },
         yaxis: {
           tickAmount: 6,
