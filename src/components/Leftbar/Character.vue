@@ -111,13 +111,13 @@
             </td>
           </tr>
 
-          <tr>
+          <!--tr>
             <td><h5>Premium items</h5></td>
             <td></td>
             <td>
               <input id="premiumItems" type="checkbox" v-model="premiumItems">
             </td>
-          </tr>
+          </tr-->
 
           <tr>
             <td><h5>Stat points</h5></td>

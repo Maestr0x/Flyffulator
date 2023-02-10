@@ -82,13 +82,15 @@ export class Mover {
     }
 
     applyPremiumItems() {
-        for (let item of Moverutils.premiumItems) {
-            if(item) {
-                if (this.activePremiumItems.find(i => i.id == item.id)) continue;
-                item.enabled = false; // disable all items initially
-                this.activePremiumItems.push(item);
+        //if (this.premiumItems) {
+            for (let item of Moverutils.premiumItems) {
+                if(item) {
+                    if (this.activePremiumItems.find(i => i.id == item.id)) continue;
+                    item.enabled = false; // disable all items initially
+                    this.activePremiumItems.push(item);
+                }
             }
-        }
+        //}
     }
 
     get parry() {
